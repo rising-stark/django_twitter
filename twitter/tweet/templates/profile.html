@@ -31,7 +31,7 @@
             <div class="col-4"><a href="/logout" class="btn btn-warning">Logout</a></div>
           </div>
           {% if not tweets %}
-            <h2>No tweets present. Be the first one to tweet</h2>
+            <h2>No tweets found for this user.</h2>
           {% else%}
             <h2 class="text-center mt-5">All tweets</h2>
             {% for tweet in tweets %}

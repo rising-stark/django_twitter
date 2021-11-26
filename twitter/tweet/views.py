@@ -48,9 +48,9 @@ def signup(request):
 			else:
 				user = User.objects.create_user(username=username, password=password, email=email)
 				user.save();
-				print('user created')
+				# user created
 				auth.login(request, user)
-				print('user automatically logged-in')
+				# user automatically logged-in
 				return redirect('tweet')
 		else:
 			messages.info(request, 'passwords not matching...')
@@ -71,7 +71,6 @@ def tweet(request):
 
 	if request.method == "POST":
 		tweet = request.POST["tweet"]
-		print("user here  = ", request.user)
 		t = Tweets(username = request.user, tweet = tweet)
 		t.save()
 		list = re.findall("[#]\w+", tweet)
@@ -82,8 +81,6 @@ def tweet(request):
 
 	hashtags = Hashtag_tweets.objects.values('hashtag').order_by('hashtag').annotate(count=Sum('count'))
 	tweets = Tweets.objects.all().order_by('-date_created')
-	print("\n\nhashtags = \n\n" , hashtags)
-	print("\n\ntweets = \n\n" , tweets)
 	return render(request, "tweet.html", {"hashtags" : hashtags, "tweets":tweets})
 
 def like(request):
@@ -113,11 +110,10 @@ def profile(request):
 		return redirect('login')
 
 	username = request.GET.get("username")
-	print("username in profile = ", username)
+
 	# If username is not passed as query parameter then showing own profile
 	if not username:
 		username = request.user
-		print("we reached here = ", username)
 
 	tweets = None
 	user = User.objects.get(username=username)
@@ -125,6 +121,24 @@ def profile(request):
 		messages.info(request, 'No such user exists')
 	else:
 		tweets = Tweets.objects.filter(username=user)
-		print("\n\nin profile tweets = \n\n" , tweets)
 
 	return render(request, "profile.html", {"tweets":tweets})
+
+def hashtag(request):
+	if not request.user.is_authenticated:
+		messages.info(request, 'You need to be logged-in to access hashtag page.')
+		messages.info(request, 'Don\'t have an account yet? Signup now')
+		return redirect('login')
+
+	hashtag = request.GET.get("hashtag")
+
+	tweets = None
+	count = 0
+	if not hashtag:
+		return redirect('tweet')
+	else:
+		tweets = Hashtag_tweets.objects.filter(hashtag=hashtag)
+		for tweet in tweets:
+			count += tweet.count
+
+	return render(request, "hashtag.html", {"tweets":tweets, "count":count})

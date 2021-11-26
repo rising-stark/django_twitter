@@ -93,7 +93,7 @@
             <h2>No hashtags to show</h2>
           {% else %}
             {% for hashtag in hashtags %}
-              <span class="hashtag btn btn-primary m-1">#{{hashtag.hashtag}}&nbsp;|&nbsp;<span class="count">{{hashtag.count}}</span></span>
+              <a href="/hashtag?hashtag={{hashtag.hashtag}}" class="hashtag btn btn-primary m-1">#{{hashtag.hashtag}}&nbsp;|&nbsp;<span class="count">{{hashtag.count}}</span></a>
             {% endfor %}
           {% endif %}
         </div>
