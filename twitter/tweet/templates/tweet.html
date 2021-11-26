@@ -27,6 +27,9 @@
     .hashtag{
       background: skyblue;
     }
+    .card form{
+      display: inline-block;
+    }
   </style>
 </head>
 
@@ -65,6 +68,8 @@
                         <input type="hidden" name="tweet_id" value={{tweet.tweet_id}}>
                         {% if request.user != tweet.username %}
                           <button type="submit" class="btn btn-info" title="If you have liked once, it will unlike on clicking it again">likes({{tweet.likes}})</button>
+                        {% else %}
+                          <span class="btn btn-secondary" title="Can't like your own tweeet">likes({{tweet.likes}})</span>
                         {% endif %}
                       </form>
                       <form method="POST" action="/delete">
