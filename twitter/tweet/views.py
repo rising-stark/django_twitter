@@ -116,7 +116,11 @@ def profile(request):
 		username = request.user
 
 	tweets = None
-	user = User.objects.get(username=username)
+	user = None
+	try:
+		user = User.objects.get(username=username)
+	except User.DoesNotExist:
+		user = None
 	if not user:
 		messages.info(request, 'No such user exists')
 	else:
