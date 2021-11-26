@@ -9,7 +9,7 @@ def home(request):
 	return render(request, "home.html")
 
 def splash(request):
-	return render(request, "home.html")
+	return render(request, "splash.html")
 
 def login(request):
 	if request.method == 'POST':
@@ -39,19 +39,29 @@ def signup(request):
 		confirm_password = request.POST['confirm_password']
 
 		if password == confirm_password:
-			if User.objects.get(username=username).exists():
+			user = None
+			try:
+				user = User.objects.get(username=username)
+			except User.DoesNotExist:
+				user = None
+			if user:
 				messages.info(request, 'Username Taken. Choose a differet username')
 				return render(request, 'login.html')
-			elif User.objects.get(email=email).exists():
+
+			try:
+				user = User.objects.get(email=email)
+			except User.DoesNotExist:
+				user = None
+			if user:
 				messages.info(request, 'An account with this email aready exists.')
 				return render(request, 'login.html')
-			else:
-				user = User.objects.create_user(username=username, password=password, email=email)
-				user.save();
-				# user created
-				auth.login(request, user)
-				# user automatically logged-in
-				return redirect('tweet')
+
+			user = User.objects.create_user(username=username, password=password, email=email)
+			user.save();
+			# user created
+			auth.login(request, user)
+			# user automatically logged-in
+			return redirect('tweet')
 		else:
 			messages.info(request, 'passwords not matching...')
 			return render(request, 'login.html')
