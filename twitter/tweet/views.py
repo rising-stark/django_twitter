@@ -39,10 +39,10 @@ def signup(request):
 		confirm_password = request.POST['confirm_password']
 
 		if password == confirm_password:
-			if User.objects.filter(username=username).exists():
+			if User.objects.get(username=username).exists():
 				messages.info(request, 'Username Taken. Choose a differet username')
 				return render(request, 'login.html')
-			elif User.objects.filter(email=email).exists():
+			elif User.objects.get(email=email).exists():
 				messages.info(request, 'An account with this email aready exists.')
 				return render(request, 'login.html')
 			else:
@@ -112,9 +112,19 @@ def profile(request):
 		messages.info(request, 'Don\'t have an account yet? Signup now')
 		return redirect('login')
 
-	tweets = ""
-	if request.method == "POST":
-		username = request.POST["username"]
-		tweets = Tweets.objects.filter(username=username)
+	username = request.GET.get("username")
+	print("username in profile = ", username)
+	# If username is not passed as query parameter then showing own profile
+	if not username:
+		username = request.user
+		print("we reached here = ", username)
+
+	tweets = None
+	user = User.objects.get(username=username)
+	if not user:
+		messages.info(request, 'No such user exists')
+	else:
+		tweets = Tweets.objects.filter(username=user)
+		print("\n\nin profile tweets = \n\n" , tweets)
 
 	return render(request, "profile.html", {"tweets":tweets})

@@ -61,7 +61,7 @@
                 {% for tweet in tweets %}
                   <div class="card my-4">
                     <div class="card-body">
-                      <h6 class="card-subtitle mb-2 text-muted">@{{tweet.username}}&nbsp;{{tweet.date_created}}</h6>
+                      <h6 class="card-subtitle mb-2 text-muted"><a href="/profile?username={{tweet.username}}">@{{tweet.username}}</a> &nbsp;{{tweet.date_created}}</h6>
                       <p class="card-text">{{tweet.tweet}}</p>
                       <form method="POST" action="/like">
                         {% csrf_token %}

@@ -26,6 +26,8 @@ urlpatterns = [
     path('signup/', views.login, name='login'),
     path('tweet/', views.tweet, name='tweet'),
     path('profile/', views.profile, name='profile'),
+    path('logout/', views.logout, name='logout'),
+    # path(r'profile/(?P<username>\w{0,50})/$', views.profile, name='profile'),
 
     # Post requests
     path('signup', views.signup, name='signup'),
