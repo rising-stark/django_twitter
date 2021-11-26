@@ -89,7 +89,12 @@ def like(request):
 	if request.method == "POST":
 		tweet_id = request.POST["tweet_id"]
 		t = Tweets.objects.get(pk=tweet_id)
-		t.likes+=1
+		obj, not_liked = like_tweets.objects.get_or_create(username = request.user, tweet_id = t)
+		if not_liked:
+			t.likes += 1
+		else:
+			obj.delete()
+			t.likes -= 1
 		t.save()
 	return redirect('tweet')
 

@@ -16,3 +16,7 @@ class Hashtags(models.Model):
 class Hashtag_tweets(models.Model):
 	hashtag = models.ForeignKey(Hashtags, on_delete=models.CASCADE)
 	tweet_id = models.ForeignKey(Tweets, on_delete=models.CASCADE)
+
+class like_tweets(models.Model):
+	username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+	tweet_id = models.ForeignKey(Tweets, on_delete=models.CASCADE)
