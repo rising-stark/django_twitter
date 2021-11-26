@@ -20,7 +20,8 @@
   </script>
   <style>
     #hashtags{
-      height: 300px;
+      min-height: 100px;
+      height: auto;
       border:  1px solid;
     }
     .hashtag{
@@ -30,7 +31,7 @@
 </head>
 
 <body>
-  <div class="container col-sm-10">
+  <div class="container col-sm-10 mt-5">
     <div class="row">
       <div class="col-10 col-md-8">
         <div class="container">
@@ -45,17 +46,17 @@
                   </div>
                   <div class="row mb-3">
                     <div class="col-sm-12 text-center">
-                      <button type="submit" class="btn btn-primary"><i class="fa fa-twitter-square" aria-hidden="true"></i>&nbsp;&nbsp;Tweet</button>
+                      <button type="submit" class="btn btn-primary"><i class="fa fa-twitter" aria-hidden="true"></i>&nbsp;&nbsp;Tweet</button>
                     </div>
                   </div>
               </form>
             </div>
-            <div class="col-12">
+            <div class="col-12 p-2">
               {% if not tweets %}
                 <h2>No tweets present. Be the first one to tweet</h2>
               {% else%}
                 {% for tweet in tweets %}
-                  <div class="card">
+                  <div class="card my-4">
                     <div class="card-body">
                       <h6 class="card-subtitle mb-2 text-muted">@{{tweet.username}}&nbsp;{{tweet.date_created}}</h6>
                       <p class="card-text">{{tweet.tweet}}</p>
@@ -63,14 +64,14 @@
                         {% csrf_token %}
                         <input type="hidden" name="tweet_id" value={{tweet.tweet_id}}>
                         {% if request.user != tweet.username %}
-                          <button type="submit" class="card-link">likes({{tweet.likes}})</button>
+                          <button type="submit" class="btn btn-info" title="If you have liked once, it will unlike on clicking it again">likes({{tweet.likes}})</button>
                         {% endif %}
                       </form>
                       <form method="POST" action="/delete">
                         {% csrf_token %}
                         <input type="hidden" name="tweet_id" value={{tweet.tweet_id}}>
                         {% if request.user == tweet.username %}
-                          <button type="submit" class="card-link">delete</button>
+                          <button type="submit" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;delete</button>
                         {% endif %}
                       </form>
                     </div>
@@ -83,9 +84,13 @@
       </div>
       <div class="col-2 col-md-4">
         <div id="hashtags">
-          {% for hashtag in hashtags %}
-            <span class="hashtag btn btn-primary">#{{hashtag.hashtag}}&nbsp;|&nbsp;<span class="count">{{hashtag.count}}</span></span>
-          {% endfor %}
+          {% if not hashtags %}
+            <h2>No hashtags to show</h2>
+          {% else %}
+            {% for hashtag in hashtags %}
+              <span class="hashtag btn btn-primary m-1">#{{hashtag.hashtag}}&nbsp;|&nbsp;<span class="count">{{hashtag.count}}</span></span>
+            {% endfor %}
+          {% endif %}
         </div>
       </div>
     </div>

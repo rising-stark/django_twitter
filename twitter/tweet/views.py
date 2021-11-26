@@ -25,8 +25,8 @@ def login(request):
 			return render(request, 'login.html')
 
 	# If user is already logged in then render the twitter feed
-	# if request.user.is_authenticated:
-	# 	return redirect('tweet')
+	if request.user.is_authenticated:
+		return redirect('tweet')
 
 	return render(request, 'login.html')
 
