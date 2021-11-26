@@ -9,14 +9,11 @@ class Tweets(models.Model):
 	likes = models.IntegerField(default=0)
 	date_created = models.DateTimeField(default=now)
 
-class Hashtags(models.Model):
-	hashtag = models.CharField(max_length=20, primary_key=True)
+class Hashtag_tweets(models.Model):
+	hashtag = models.CharField(max_length=20)
+	tweet_id = models.ForeignKey(Tweets, on_delete=models.CASCADE)
 	count = models.IntegerField(default=0)
 
-class Hashtag_tweets(models.Model):
-	hashtag = models.ForeignKey(Hashtags, on_delete=models.CASCADE)
-	tweet_id = models.ForeignKey(Tweets, on_delete=models.CASCADE)
-
-class like_tweets(models.Model):
+class Like_tweets(models.Model):
 	username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	tweet_id = models.ForeignKey(Tweets, on_delete=models.CASCADE)

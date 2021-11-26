@@ -2,6 +2,7 @@ import re
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
+from django.db.models import Sum
 from tweet.models import *
 
 def home(request):
@@ -75,11 +76,11 @@ def tweet(request):
 		t.save()
 		list = re.findall("[#]\w+", tweet)
 		for hashtag in list:
-			obj, created = Hashtags.objects.get_or_create(hashtag=hashtag[1:])
+			obj, created = Hashtag_tweets.objects.get_or_create(hashtag=hashtag[1:], tweet_id=t)
 			obj.count += 1
 			obj.save()
 
-	hashtags = Hashtags.objects.all()
+	hashtags = Hashtag_tweets.objects.values('hashtag').order_by('hashtag').annotate(count=Sum('count'))
 	tweets = Tweets.objects.all().order_by('-date_created')
 	print("\n\nhashtags = \n\n" , hashtags)
 	print("\n\ntweets = \n\n" , tweets)
@@ -89,7 +90,7 @@ def like(request):
 	if request.method == "POST":
 		tweet_id = request.POST["tweet_id"]
 		t = Tweets.objects.get(pk=tweet_id)
-		obj, not_liked = like_tweets.objects.get_or_create(username = request.user, tweet_id = t)
+		obj, not_liked = Like_tweets.objects.get_or_create(username = request.user, tweet_id = t)
 		if not_liked:
 			t.likes += 1
 		else:
