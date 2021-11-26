@@ -7,7 +7,7 @@ class Tweets(models.Model):
 	username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 	tweet = models.CharField(max_length=200)
 	likes = models.IntegerField(default=0)
-	date_created = models.DateField(default=now)
+	date_created = models.DateTimeField(default=now)
 
 class Hashtags(models.Model):
 	hashtag = models.CharField(max_length=20, primary_key=True)

@@ -51,22 +51,32 @@
               </form>
             </div>
             <div class="col-12">
-              {% for tweet in tweets %}
-                <div class="card">
-                  <div class="card-body">
-                    <h6 class="card-subtitle mb-2 text-muted">@{{tweet.uname}}&nbsp;{{tweet.date_created}}</h6>
-                    <p class="card-text">{{tweet.tweet}}</p>
-                    <form method="POST" action="/like">
-                      {% csrf_token %}
-                      <input type="hidden" name="tweet_id" value={{tweet.tweet_id}}>
-                      <button type="submit" class="card-link">likes({{tweet.likes}})</button>
-                    </form>
-                    {% if False %}
-                      <a href="#" class="card-link">delete</a>
-                    {% endif %}
+              {% if not tweets %}
+                <h2>No tweets present. Be the first one to tweet</h2>
+              {% else%}
+                {% for tweet in tweets %}
+                  <div class="card">
+                    <div class="card-body">
+                      <h6 class="card-subtitle mb-2 text-muted">@{{tweet.username}}&nbsp;{{tweet.date_created}}</h6>
+                      <p class="card-text">{{tweet.tweet}}</p>
+                      <form method="POST" action="/like">
+                        {% csrf_token %}
+                        <input type="hidden" name="tweet_id" value={{tweet.tweet_id}}>
+                        {% if request.user != tweet.username %}
+                          <button type="submit" class="card-link">likes({{tweet.likes}})</button>
+                        {% endif %}
+                      </form>
+                      <form method="POST" action="/delete">
+                        {% csrf_token %}
+                        <input type="hidden" name="tweet_id" value={{tweet.tweet_id}}>
+                        {% if request.user == tweet.username %}
+                          <button type="submit" class="card-link">delete</button>
+                        {% endif %}
+                      </form>
+                    </div>
                   </div>
-                </div>
-              {% endfor %}
+                {% endfor %}
+              {% endif %}
             </div>
           </div>
         </div>

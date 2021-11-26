@@ -30,6 +30,7 @@ urlpatterns = [
     # Post requests
     path('signup', views.signup, name='signup'),
     path('login', views.login, name='login'),
+    path('tweet', views.tweet, name='tweet'),
     path('like', views.like, name='like'),
     path('delete', views.delete, name='delete'),
 ]
